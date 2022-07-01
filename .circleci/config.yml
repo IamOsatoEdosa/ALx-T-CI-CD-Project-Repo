@@ -1,0 +1,98 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+commands:
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy environment
+          # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
+          # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID}
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  create_infrastructure: 
+      docker:
+        - image: amazon/aws-cli
+      steps:
+        - checkout
+        - run:
+            name: Create a good Cloudformation Stack
+            command: |
+              aws cloudformation deploy \
+                --template-file Exercise3.yml \
+                --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+                --region us-east-1
+  configure_infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys: 
+              fingerprints: ["e9:d9:42:31:79:02:c3:7f:97:21:c3:17:7f:74:8d:b4"]
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Run Playbook and Configure servers
+          command: |
+            ansible-playbook -i inventory.txt main-remote.yml
+  create_infrastructure2:
+      docker:
+        - image: amazon/aws-cli
+      steps:
+        - checkout
+        - run:
+            name: Create Cloudformation Stack
+            command: |
+              aws cloudformation deploy \
+                --template-file Exercise3.yml \
+                --stack-name myStack-${CIRCLE_WORKFLOW_ID} \
+                --region us-east-1
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps: 
+      - run: apk add --update curl
+      - run:
+          name: a smoke test
+          command: |
+            URL="https://NonExistentWebsite.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
+  smoke_test2:
+      docker:
+        - image: amazon/aws-cli
+      steps:
+        - run:
+            name: Test job
+            # Fail the job intentionally to simulate an error.
+            command:  return 1
+        - destroy_environment
+    
+# If you still facing accessability issue during SSH, then create a "ansible.cfg" file in the top level directory, with the following content
+# [defaults]
+# host_key_checking = false
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  Ansible-workflow:
+    jobs:
+      #- create_infrastructure
+      #- configure_infrastructure
+            # - create_infrastructure is commented out so as to expedite the build process, if not there would have been a "requires field"
+      #- smoke_test
+      - create_infrastructure2
+      - smoke_test2:
+          requires:
+            - create_infrastructure2
