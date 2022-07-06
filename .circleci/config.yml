@@ -144,11 +144,11 @@ jobs:
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --output text >> ~/ALx-T-CI-CD-Project-Repo/.circleci/ansible/inventory.txt
+            --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - ALx-T-CI-CD-Project-Repo/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   configure-infrastructure:
@@ -166,14 +166,13 @@ jobs:
             apk add --update ansible
             pip install awscli
             aws --version
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Run Playbook and Configure server
           command: |
-            cd ~/ALx-T-CI-CD-Project-Repo/.circleci/ansible
+            cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
-      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 workflows:
   UdaPeopleWorkflow:
     jobs:
