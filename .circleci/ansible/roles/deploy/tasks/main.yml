@@ -6,7 +6,7 @@
     become: true
     synchronize:
       src: ../../artifact.tar.gz
-      dest: ~/artifact.tar.gz
+      dest: /home/ubuntu/artifact.tar.gz
       recursive: true
 
   - name: Creates a directory for the app
@@ -17,7 +17,7 @@
   - name: "Extract Artifact"
     become: yes
     unarchive:
-      src: ~/artifact.tar.gz
+      src: /home/ubuntu/artifact.tar.gz
       dest: ~/backend_app
 
   - name: "start server"
