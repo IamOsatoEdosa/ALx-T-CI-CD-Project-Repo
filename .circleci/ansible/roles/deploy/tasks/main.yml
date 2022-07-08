@@ -5,14 +5,14 @@
   - name: "copy artifact to EC2 backend"
     become: yes
     synchronize:
-      src: ~/project/.circleci/ansible/roles/deploy/files/artifact.tar.gz
+      src: files/artifact.tar.gz
       dest: ~/
       recursive: true
 
   - name: "Extract Artifact"
     become: yes
     unarchive:
-        src: ~/project/.circleci/ansible/roles/deploy/files/artifact.tar.gz
+        src: artifact.tar.gz
         dest: ~/
 
   - name: "start server"
