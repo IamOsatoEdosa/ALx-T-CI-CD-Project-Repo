@@ -21,8 +21,7 @@
              npm install
              pm2 stop default
              sudo pm2 start npm -- start
-    args:
-      chdir: /home/ubuntu/uda_app/dist
+             
     environment:
         ENVIRONMENT: production
         TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
