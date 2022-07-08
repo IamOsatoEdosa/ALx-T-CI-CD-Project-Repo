@@ -23,13 +23,13 @@
       src: ~/backend_app/artifact.tar.gz
       dest: ~/backend_app
 
-    - name: "start server"
-      become: true
-      shell: |
-              cd ~/backend_app
-              npm install
-              pm2 stop default
-              sudo pm2 start npm -- start
+  - name: "start server"
+    become: true
+    shell: |
+            cd ~/backend_app
+            npm install
+            pm2 stop default
+            sudo pm2 start npm -- start
 
     environment:
         ENVIRONMENT: production
