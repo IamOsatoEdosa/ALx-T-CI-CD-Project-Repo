@@ -9,11 +9,11 @@
       dest: ~/
       recursive: true
 
-  # - name: "Extract Artifact"
-  #   become: yes
-  #   unarchive:
-  #     src: ~/artifact.tar.gz
-  #     dest: ~/
+  - name: "Extract Artifact"
+    become: yes
+    unarchive:
+      src: ~/artifact.tar.gz
+      dest: ~/
 
   # - name: Creates a directory for the app
   #   file:
