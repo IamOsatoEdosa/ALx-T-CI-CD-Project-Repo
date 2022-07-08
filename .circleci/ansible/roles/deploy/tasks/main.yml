@@ -14,13 +14,10 @@
       path: ~/backend_app
       state: directory
 
-  - name: Extract the zipped artifact
-    shell: tar xzvf artifact.tar.gz --directory backend_app
-
   - name: "Extract Artifact"
     become: yes
     unarchive:
-      src: ~/backend_app/artifact.tar.gz
+      src: ~/artifact.tar.gz
       dest: ~/backend_app
 
   - name: "start server"
