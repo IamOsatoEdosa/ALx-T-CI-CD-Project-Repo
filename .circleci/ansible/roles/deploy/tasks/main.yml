@@ -9,11 +9,16 @@
       dest: ~/
       recursive: true
 
-  - name: "Extract Artifact"
-    become: yes
-    unarchive:
-      src: ~/
-      dest: ~/
+  - name: Creates directory
+    file:
+      path: ~/backend_app
+      state: directory
+
+  # - name: "Extract Artifact"
+  #   become: yes
+  #   unarchive:
+  #     src: ~/
+  #     dest: ~/
 
   # - name: Creates a directory for the app
   #   file:
