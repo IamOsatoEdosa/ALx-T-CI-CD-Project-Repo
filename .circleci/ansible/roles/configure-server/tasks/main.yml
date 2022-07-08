@@ -5,9 +5,9 @@
     update_cache: yes
 
 - name: "upgrade packages"
-    become: yes
-    apt:
-      upgrade: yes
+  become: yes
+  apt:
+    upgrade: yes
 
 - name: remove dependencies that are no longer required
   become: yes
@@ -20,7 +20,7 @@
     name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
-    
+
 - name: "install pm2"
   become: yes
   npm:
