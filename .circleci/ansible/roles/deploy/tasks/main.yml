@@ -12,7 +12,7 @@
   - name: "Extract Artifact"
     become: yes
     unarchive:
-      src: ~/artifact.tar.gz
+      src: ~/
       dest: ~/
 
   # - name: Creates a directory for the app
