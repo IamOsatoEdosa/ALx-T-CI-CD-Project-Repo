@@ -14,6 +14,13 @@
       path: ~/backend_app
       state: directory
 
+  - name: "extract artifact into backend_app"
+      become: true
+      shell: |
+              cp artifact.tar.gz backend_app
+              cd backend_app
+              tar xzvf artifact.tar.gz
+
   # - name: "Extract Artifact"
   #   become: yes
   #   unarchive:
