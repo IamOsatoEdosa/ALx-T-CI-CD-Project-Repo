@@ -5,27 +5,27 @@
   - name: "copy zipped archive"
     become: true
     synchronize:
-      src: files/artifact.tar.gz
+      src: ../../artifact.tar.gz
       dest: ~/
       recursive: true
 
-  - name: "Extract Artifact"
-    become: yes
-    unarchive:
-      src: ~/artifact.tar.gz
-      dest: ~/
+  # - name: "Extract Artifact"
+  #   become: yes
+  #   unarchive:
+  #     src: ~/artifact.tar.gz
+  #     dest: ~/
 
   # - name: Creates a directory for the app
   #   file:
   #     path: ~/backend_app
   #     state: directory
 
-  - name: "start server"
-    become: true
-    shell: |
-            npm install
-            pm2 stop default
-            sudo pm2 start npm -- start
+  # - name: "start server"
+  #   become: true
+  #   shell: |
+  #           npm install
+  #           pm2 stop default
+  #           sudo pm2 start npm -- start
 
     environment:
         ENVIRONMENT: production
