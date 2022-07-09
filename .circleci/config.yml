@@ -190,7 +190,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: Install AWS cli dependencies
+          name: Install needed AWS cli dependencies
           command: |
             sudo apt-get update && sudo apt-get install -yy less
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
