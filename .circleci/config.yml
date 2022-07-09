@@ -47,6 +47,11 @@ jobs:
             cd frontend
             npm install
             npm run build
+      - run:
+          name: testing
+          command: |
+            export IGP=$"AWAY"
+            echo ${IGP}
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -56,13 +61,19 @@ jobs:
     steps:
       - checkout
       - restore_cache:
+          keys: [frontend-build]
+      - restore_cache:
           keys: [backend-build]
       - run:
-          name: Back-end build
+          name: testing
           command: |
-            cd backend
-            npm install
-            npm run build
+            echo ${IGP}
+      # - run:
+      #     name: Back-end build
+      #     command: |
+      #       cd backend
+      #       npm install
+      #       npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -346,6 +357,13 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install -y nodejs         
       - run:
+          name: Get ID of Blue cloudfront distribution to be deprecated
+          command: |
+            export BlueWorkflowID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
+              echo "The cloudfront distribution to be deprecated is ${BlueWorkflowID}"
+      - run:
           name: Update cloudfront distribution
           command: |
             aws cloudformation deploy \
@@ -353,6 +371,10 @@ jobs:
             --stack-name InitialStack \
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - ~/
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -362,13 +384,15 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get old stack workflow id
           command: |
-            export OldWorkflowID=$(aws cloudformation \
+            export LiveWorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
-              echo OldWorkflowID: "${OldWorkflowID}"
+              echo LiveWorkflowID: "${LiveWorkflowID}"
               echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
           
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
@@ -377,11 +401,10 @@ jobs:
       - run:
           name: Remove old stacks and files
           command: |
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            if [[ "${STACKS[@]}" =~ "${LiveWorkflowID}" ]]
             then
-              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              echo "udapeople-${LiveWorkflowID} stack is now Green so udapeople-${BlueWorkflowID} bucket will now be deleted 
+              aws s3 rm "s3://udapeople-${BlueWorkflowID}" --recursive
             fi
 
 workflows:
@@ -389,30 +412,30 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - scan-backend:
-          requires: [build-backend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          # filters:
-          #   branches:
-          #     only: [test-feature-branch]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
-      - deploy-backend:
-          requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #     # filters:
+      #     #   branches:
+      #     #     only: [test-feature-branch]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [deploy-backend, deploy-frontend]
+      # - cloudfront-update:
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
