@@ -1,4 +1,7 @@
 ---
+- name: "show remote environment"
+  shell: env
+
 - name: "update apt packages"
   become: yes
   apt:
@@ -7,7 +10,7 @@
 - name: "upgrade packages"
   become: yes
   apt:
-    upgrade: yes
+    upgrade: true
 
 - name: remove dependencies that are no longer required
   become: yes
@@ -19,7 +22,11 @@
   apt:
     name: ["nodejs", "npm"]
     state: latest
-    update_cache: yes
+    update_cache: true
+
+- name: "install nodejs 13.8.0"
+  become: yes
+  shell: n 13.8.0
 
 - name: "install pm2"
   become: yes
@@ -28,14 +35,3 @@
     global: yes
     production: yes
     state: present
-
-  environment:
-    - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
-    - TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
-    - TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
-    - TYPEORM_PORT: 5432
-    - TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
-    - TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD')}}"
-    - TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
-    - TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
-    - TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
