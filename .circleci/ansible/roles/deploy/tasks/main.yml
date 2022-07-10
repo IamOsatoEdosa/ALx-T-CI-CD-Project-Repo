@@ -10,6 +10,7 @@
       recursive: true
 
   - name: Creates directory
+    become: true
     file:
       path: ~/backend_app
       state: directory
@@ -22,6 +23,7 @@
             tar xzvf artifact.tar.gz
 
   - name: Install dependencies
+    become: true
     args:
       chdir: /home/ubuntu/backend_app
     shell: npm install
@@ -31,7 +33,7 @@
     shell: |
             cd backend_app
             pm2 stop default
-            pm2 start npm -- start 
+            sudo pm2 start npm -- start 
     environment:
      ENVIRONMENT: production
      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
