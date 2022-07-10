@@ -312,7 +312,6 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            cd ..
             cd ~/project/.circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
