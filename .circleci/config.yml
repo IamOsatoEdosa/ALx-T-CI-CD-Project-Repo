@@ -198,7 +198,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - project/backend/.env
+            - backend/.env
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   run-migrations:
@@ -209,7 +209,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - attach_workspace:
-          at: ~/ 
+          at: .
       - run:
           name: Install needed AWS cli dependencies
           command: |
@@ -234,7 +234,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/*
+            - backend/migrations_dump.txt
       - destroy-environment:
             workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   deploy-frontend:
