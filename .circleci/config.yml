@@ -295,11 +295,11 @@ jobs:
             apk add --update tar gzip ansible curl rsync openssh nodejs npm bash
             pip install awscli
             aws --version
-      - run:
-          name: show contents on inventory file
-          command: |
-                cd ~/project/.circleci/ansible
-                cat inventory.txt
+      # - run:
+      #     name: show contents on inventory file
+      #     command: |
+      #           cd ~/project/.circleci/ansible
+      #           cat inventory.txt
       - run:
           name: Zip the backend directory
           command: |
