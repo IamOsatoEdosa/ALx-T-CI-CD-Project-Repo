@@ -245,7 +245,7 @@ jobs:
       - restore_cache:
           keys: [frontend_build]
       - attach_workspace:
-          at: ~/
+          at: ~/project
       - run:
           name: Install dependencies
           command: |
@@ -288,7 +288,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["0a:ed:a2:ec:07:06:3e:15:13:12:f8:1d:b2:b0:3d:5d"]
       - attach_workspace:
-          at: ~/
+          at: ~/project
       - run:
           name: Install necessary dependencies
           command: |
@@ -296,9 +296,15 @@ jobs:
             pip install awscli
             aws --version
       - run:
+          name: show contents on inventory file
+          command: |
+                cd ~/project/.circleci/ansible
+                cat inventory.txt
+      - run:
           name: Zip the backend directory
           command: |
-            cd backend
+            cd ..
+            cd ~/project/backend
             npm i
             npm run build
             cd ..
@@ -306,7 +312,8 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            cd .circleci/ansible
+            cd ..
+            cd ~/project/.circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml -v
