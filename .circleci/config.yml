@@ -291,7 +291,7 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run:
-          name: Install necessary dependencies
+          name: Install necessary dependencies and Zip back end directory
           command: |
             apk add --update tar gzip ansible curl rsync openssh nodejs npm bash
             pip install awscli
@@ -302,8 +302,12 @@ jobs:
       #           cd ~/project/.circleci/ansible
       #           cat inventory.txt
       - run:
-          name: Zip the backend directory
+          name: Deploy Backend
           command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is: "
