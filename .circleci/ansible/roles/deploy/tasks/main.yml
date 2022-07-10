@@ -25,7 +25,7 @@
   - name: Install dependencies
     become: true
     args:
-      chdir: /home/ubuntu/backend_app
+      chdir:  backend_app
     shell: npm install
 
   - name: "start server"
