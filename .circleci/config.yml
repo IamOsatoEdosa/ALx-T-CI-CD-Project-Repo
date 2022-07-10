@@ -303,7 +303,6 @@ jobs:
       - run:
           name: Zip the backend directory
           command: |
-            cd ..
             cd ~/project/backend
             npm i
             npm run build
@@ -311,7 +310,7 @@ jobs:
             tar -C backend -czvf artifact.tar.gz .
       - run:
           name: Deploy backend
-          working_directory: ./.circleci/ansible
+          working_directory: ~/project/.circleci/ansible
           command: |
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
