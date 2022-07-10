@@ -25,14 +25,15 @@
     become: true
     args:
       chdir: backend_app
-    shell: npm install
+    shell: |
+          npm install
 
   - name: "start server"
     become: true
     shell: |
-            cd backend_app
-            pm2 stop default
-            sudo pm2 start npm -- start 
+          cd backend_app
+          pm2 stop default
+          sudo pm2 start npm -- start 
     environment:
      ENVIRONMENT: production
      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
