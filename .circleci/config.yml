@@ -330,10 +330,10 @@ jobs:
             else
               return 1
             fi
-      # - destroy-environment:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      # - revert-migrations:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
 
   cloudfront-update:
     docker:
@@ -347,12 +347,13 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install -y nodejs         
       - run:
-          name: Get ID of Blue cloudfront distribution to be deprecated
+          name: Get ID of cloudfront distribution to be deprecated
           command: |
-            export BlueWorkflowID=$(aws cloudformation \
+            export OldWorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
-              echo "The cloudfront distribution to be deprecated is ${BlueWorkflowID}"
+              echo "The cloudfront distribution to be deprecated is udapeople-${OldWorkflowID}"
+              echo ${OldWorkflowID} > OldWorkflowID.txt 
       - run:
           name: Update cloudfront distribution
           command: |
@@ -361,6 +362,10 @@ jobs:
             --stack-name InitialStack \
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/OldWorkflowID.txt
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -370,6 +375,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get old stack workflow id
           command: |
@@ -382,14 +389,18 @@ jobs:
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"
-      # - run:
-      #     name: Remove old stacks and files
-      #     command: |
-      #       if [[ "${STACKS[@]}" =~ "${LiveWorkflowID}" ]]
-      #       then
-      #         echo "udapeople-${LiveWorkflowID} stack is now Green so udapeople-${BlueWorkflowID} bucket will now be deleted 
-      #         aws s3 rm "s3://udapeople-${BlueWorkflowID}" --recursive
-      #       fi
+
+            OldWorkflowID=$(cat OldWorkflowID.txt)
+            echo OldWorkflowID: "${OldWorkflowID}"
+            echo OldWorkflowID
+      - run:
+          name: Remove old stacks and files
+          command: |
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
+            then
+              echo "udapeople-${LiveWorkflowID} stack is now Green so udapeople-${OldWorkflowID} bucket will now be deleted 
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+            fi
 
 workflows:
   UdaPeopleWorkflow:
