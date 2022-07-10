@@ -11,9 +11,8 @@
 
   - name: Creates directory
     become: true
-    file:
-      path: ~/backend_app
-      state: directory
+    shell: |
+        mkdir backend_app
 
   - name: "extract artifact into backend_app"
     become: true
@@ -25,7 +24,7 @@
   - name: Install dependencies
     become: true
     args:
-      chdir:  backend_app
+      chdir: backend_app
     shell: npm install
 
   - name: "start server"
