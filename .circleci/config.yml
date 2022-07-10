@@ -155,7 +155,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .circleci/ansible/inventory.txt
+            - .circleci/ansible/*
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   configure-infrastructure:
@@ -167,7 +167,7 @@ jobs:
           fingerprints:
             - "0a:ed:a2:ec:07:06:3e:15:13:12:f8:1d:b2:b0:3d:5d"
       - attach_workspace:
-          at: /backend
+          at: .
       - run:
           name: Install dependencies
           command: |
@@ -196,7 +196,7 @@ jobs:
               cat inventory.txt
               ansible-playbook -i inventory.txt configure-server.yml
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
             - project/backend/.env
       - destroy-environment:
