@@ -151,7 +151,7 @@ jobs:
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --output text >> project/.circleci/ansible/inventory.txt
+            --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: .
           paths:
@@ -167,7 +167,7 @@ jobs:
           fingerprints:
             - "0a:ed:a2:ec:07:06:3e:15:13:12:f8:1d:b2:b0:3d:5d"
       - attach_workspace:
-          at: ~/project
+          at: /backend
       - run:
           name: Install dependencies
           command: |
