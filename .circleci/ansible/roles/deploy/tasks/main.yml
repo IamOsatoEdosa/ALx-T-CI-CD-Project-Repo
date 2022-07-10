@@ -6,7 +6,7 @@
     become: true
     synchronize:
       src: ../../artifact.tar.gz
-      dest: ~/
+      dest: ~/artifact.tar.gz
       recursive: true
 
   - name: Creates directory
@@ -23,6 +23,8 @@
 
   - name: "start server"
     become: true
+    args:
+      chdir: /home/ubuntu/backend_app
     shell: |
             cd backend_app
             npm install

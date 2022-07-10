@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            cd frontend
+            cd ./frontend
             npm install
             npm run build
       - save_cache:
@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Back-end build
           command: |
-            cd backend
+            cd ./backend
             npm install
             npm run build
       - save_cache:
@@ -117,7 +117,9 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix --audit-level=critical
+            npm audit fix --audit-level=critical --force
+            npm audit fix --force
+            npm audit --audit-level=critical
                  
   deploy-infrastructure:
     docker:
@@ -156,7 +158,6 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-            - project/
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   configure-infrastructure:
@@ -180,6 +181,7 @@ jobs:
           name: Run Playbook and Configure server
           command: |
             cd .circleci/ansible
+            cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -217,6 +219,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: [frontend_build]
       - attach_workspace:
           at: ~/
       - run:
