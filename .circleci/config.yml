@@ -180,26 +180,27 @@ jobs:
           name: Run Playbook and Configure server
           command: |
           
-              # echo NODE_ENV=production > ~/project/backend/.env
-              # echo TYPEORM_CONNECTION=postgres >> ~/project/backend/.env
-              # echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ~/project/backend/.env
-              # echo TYPEORM_HOST=udapeople-database1.c2qxjxanfw6n.us-east-1.rds.amazonaws.com >> ~/project/backend/.env
-              # echo TYPEORM_PORT=5432 >> ~/project/backend/.env
-              # echo TYPEORM_USERNAME=udapeople >> ~/project/backend/.env
-              # echo TYPEORM_PASSWORD=udapeople >> ~/project/backend/.env
-              # echo TYPEORM_DATABASE=udapeople >> ~/project/backend/.env
-              # echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ~/project/backend/.env
-              # echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ~/project/backend/.env
+        # echo NODE_ENV=production > ~/project/backend/.env
+        # echo TYPEORM_CONNECTION=postgres >> ~/project/backend/.env
+        # echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ~/project/backend/.env
+        # echo TYPEORM_HOST=udapeople-database1.c2qxjxanfw6n.us-east-1.rds.amazonaws.com >> ~/project/backend/.env
+        # echo TYPEORM_PORT=5432 >> ~/project/backend/.env
+        # echo TYPEORM_USERNAME=udapeople >> ~/project/backend/.env
+        # echo TYPEORM_PASSWORD=udapeople >> ~/project/backend/.env
+        # echo TYPEORM_DATABASE=udapeople >> ~/project/backend/.env
+        # echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ~/project/backend/.env
+        # echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ~/project/backend/.env
 
               # cat ~/project/backend/.env
 
               cd ~/project/.circleci/ansible
               cat inventory.txt
               ansible-playbook -i inventory.txt configure-server.yml
-      # - persist_to_workspace:
-      #     root: ~/project
-      #     paths:
-      #       - backend/.env
+              cat ~/project/backend/.env
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - backend/.env
       # - destroy-environment:
       #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   run-migrations:
@@ -264,10 +265,10 @@ jobs:
                 sudo apt-get update && sudo apt-get install -y ca-certificates
                 curl https://kvdb.io/5Zd7N5QMyLnZR9oWAbJ4cM/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - backend
+      # - persist_to_workspace:
+      #     root: ~/project
+      #     paths:
+      #       - backend/.env
       - destroy-environment:
             workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   deploy-frontend:
@@ -328,7 +329,7 @@ jobs:
             pip install awscli
             aws --version 
       - run:
-          name: Zip backend directory and Deploy the Backend
+          name: Zip backend directory
           command: |
             tar -C backend -czvf artifact.tar.gz .
       - run:
