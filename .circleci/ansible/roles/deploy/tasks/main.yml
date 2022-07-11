@@ -38,7 +38,7 @@
   - name: "Extract artifact to EC2"
     unarchive:
       src: ~/project/artifact.tar.gz
-      dest: ~backend_app 
+      dest: ~/backend_app 
 
   - name: "start server"
     shell: |
