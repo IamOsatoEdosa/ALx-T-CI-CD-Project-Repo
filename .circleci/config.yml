@@ -223,7 +223,7 @@ jobs:
           name: prepare env variables
           command: |
                cat \<<EOF > backend/.env
-               ENVIRONMENT=production > ~/project/backend/.env
+               ENVIRONMENT=production
                 VERSION=1
                TYPEORM_CONNECTION=postgres
                TYPEORM_MIGRATIONS_DIR=./src/migrations
@@ -478,10 +478,10 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
