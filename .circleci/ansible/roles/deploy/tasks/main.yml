@@ -7,14 +7,6 @@
     apt:
       upgrade: true
 
-  - name: "install pm2"
-    become: yes
-    npm:
-      name: pm2
-      global: yes
-      production: yes
-      state: present
-
   - name: "copy zipped archive"
     become: yes
     synchronize:
