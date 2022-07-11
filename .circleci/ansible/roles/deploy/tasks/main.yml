@@ -35,10 +35,16 @@
   #     path: home/ubuntu/backend_app
   #     state: directory
 
+  # - name: "Extract artifact to EC2"
+  #   unarchive:
+  #     src: ~/artifact.tar.gz
+  #     dest: ~/
+
   - name: "Extract artifact to EC2"
     unarchive:
       src: ~/artifact.tar.gz
       dest: ~/
+      remote_src: True
 
   - name: "start server"
     shell: |
