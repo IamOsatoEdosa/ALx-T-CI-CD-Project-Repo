@@ -2,11 +2,6 @@
   - name: "The remote environment"
     shell: env
 
-  - name: "upgrade packages"
-    become: yes
-    apt:
-      upgrade: true
-
   - name: "copy zipped archive"
     become: yes
     synchronize:
@@ -18,7 +13,19 @@
     shell: |
         tar xzvf artifact.tar.gz
 
-  - name: "start server"
+  - name: install dependencies, such as NodeJS and NPM
+    become: yes
+    apt:
+      name: ["nodejs", "npm"]
+      state: latest
+
+  - name: "install pm2"
+    become: yes
+    npm:
+      name: pm2
+      global: yes
+
+  - name: "start Udapeople application"
     shell: |
         npm install
         pm2 stop default
