@@ -302,7 +302,7 @@ jobs:
       #           cd ~/project/.circleci/ansible
       #           cat inventory.txt
       - run:
-          name: Deploy Backend
+          name: Deploy the Backend
           command: |
             cd backend
             npm i
