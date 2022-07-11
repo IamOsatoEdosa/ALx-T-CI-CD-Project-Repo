@@ -16,12 +16,14 @@
     state: directory
 
 - name: "Extract artifact to EC2"
+  become: true
   unarchive:
     src: /home/ubuntu/artifact.tar.gz
     dest: /home/ubuntu/backend_app
     remote_src: True
 
 - name: Install dependencies
+  become: true
   args:
     chdir: /home/ubuntu/backend_app
   shell: npm install

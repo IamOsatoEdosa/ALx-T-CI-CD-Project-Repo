@@ -301,6 +301,10 @@ jobs:
           name: Provide Environment Variables and Zip backend directory
           command: |
             cat backend/.env
+            cd backend
+            npm i
+            npm run build
+            cd ..
             tar -C backend -czvf artifact.tar.gz .
       - run:
           name: Deploy the Backend
