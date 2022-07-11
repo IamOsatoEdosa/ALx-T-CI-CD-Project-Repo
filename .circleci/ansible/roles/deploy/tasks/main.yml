@@ -22,12 +22,12 @@
       production: yes
       state: present
 
-  - name: "copy zipped archive"
-    become: yes
-    synchronize:
-      src: ../../artifact.tar.gz
-      dest: ~/artifact.tar.gz
-      recursive: true
+  # - name: "copy zipped archive"
+  #   become: yes
+  #   synchronize:
+  #     src: ../../artifact.tar.gz
+  #     dest: ~/artifact.tar.gz
+  #     recursive: true
 
   - name: Creates directory
     become: yes
@@ -36,8 +36,8 @@
 
   - name: "Extract artifact to EC2"
     unarchive:
-      src: ~/artifact.tar.gz
-      dest: /backend_app
+      src: ~/project/artifact.tar.gz
+      dest: ~/backend_app 
 
   - name: "start server"
     shell: |

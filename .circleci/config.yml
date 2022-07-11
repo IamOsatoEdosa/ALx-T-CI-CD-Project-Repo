@@ -208,8 +208,21 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      - attach_workspace:
-          at: ~/
+      # - attach_workspace:
+      #     at: ~/
+      - run:
+          name: prepare env variables
+          command: |
+              echo NODE_ENV=production > ~/project/backend/.env
+              echo TYPEORM_CONNECTION=postgres >> ~/project/backend/.env
+              echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ~/project/backend/.env
+              echo TYPEORM_HOST=udapeople-database1.c2qxjxanfw6n.us-east-1.rds.amazonaws.com >> ~/project/backend/.env
+              echo TYPEORM_PORT=5432 >> ~/project/backend/.env
+              echo TYPEORM_USERNAME=udapeople >> ~/project/backend/.env
+              echo TYPEORM_PASSWORD=udapeople >> ~/project/backend/.env
+              echo TYPEORM_DATABASE=udapeople >> ~/project/backend/.env
+              echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ~/project/backend/.env
+              echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ~/project/backend/.env
       - run:
           name: Install needed AWS cli dependencies
           command: |
@@ -217,6 +230,7 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
+            aws --version
       - run:
           name: Run migrations
           command: |
@@ -295,7 +309,7 @@ jobs:
           command: |
             apk add --update tar gzip ansible curl rsync openssh nodejs npm bash
             pip install awscli
-            aws --version
+            aws --version 
       - run:
           name: Deploy the Backend
           command: |
