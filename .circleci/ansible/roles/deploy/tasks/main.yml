@@ -16,7 +16,7 @@
   - name: install dependencies, such as NodeJS and NPM
     become: yes
     apt:
-      name: ["nodejs", "npm"]
+      name: ["npm"]
       state: latest
 
   - name: "install pm2"
