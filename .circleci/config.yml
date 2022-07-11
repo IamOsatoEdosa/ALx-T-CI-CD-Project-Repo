@@ -312,19 +312,19 @@ jobs:
       - run:
           name: Provide Environment Variables and Zip backend directory
           command: |
-            cd backend
+            cd ../../backend
             touch /.env
-            echo NODE_ENV=production > backend/.env
-            echo TYPEORM_CONNECTION=postgres >> backend/.env
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> backend/.env
-            echo TYPEORM_HOST=udapeople-database1.c2qxjxanfw6n.us-east-1.rds.amazonaws.com >> backend/.env
-            echo TYPEORM_PORT=5432 >> backend/.env
-            echo TYPEORM_USERNAME=udapeople >> backend/.env
-            echo TYPEORM_PASSWORD=udapeople >> backend/.env
-            echo TYPEORM_DATABASE=udapeople >> backend/.env
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> backend/.env
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> backend/.env
-            cat backend/.env
+            echo NODE_ENV=production > ../../backend/.env
+            echo TYPEORM_CONNECTION=postgres >> ../../backend/.env
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ../../backend/.env
+            echo TYPEORM_HOST=udapeople-database1.c2qxjxanfw6n.us-east-1.rds.amazonaws.com >> ../../backend/.env
+            echo TYPEORM_PORT=5432 >> ../../backend/.env
+            echo TYPEORM_USERNAME=udapeople >> ../../backend/.env
+            echo TYPEORM_PASSWORD=udapeople >> ../../backend/.env
+            echo TYPEORM_DATABASE=udapeople >> ../../backend/.env
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ../../backend/.env
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ../../backend/.env
+            cat ../../backend/.env
 
             cd ..
             tar -C backend -czvf artifact.tar.gz .
@@ -335,10 +335,10 @@ jobs:
             echo "Contents  of the inventory.txt file is: "
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml -v
-      # - destroy-environment:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      # - revert-migrations:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   smoke-test:
     docker:
       - image: python:3.7-alpine3.11 
