@@ -216,7 +216,7 @@ jobs:
           name: Install needed AWS cli dependencies
           command: |
             sudo apt-get update && sudo apt-get install -yy less
-            curl --insecure "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
             aws --version
@@ -232,7 +232,7 @@ jobs:
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
                 sudo apt-get update && sudo apt-get install -y ca-certificates
-                curl https://kvdb.io/5Zd7N5QMyLnZR9oWAbJ4cM/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                curl --insecure https://kvdb.io/5Zd7N5QMyLnZR9oWAbJ4cM/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - persist_to_workspace:
           root: ~/project
@@ -354,10 +354,10 @@ jobs:
             else
               return 1
             fi
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      - revert-migrations:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
+      # - destroy-environment:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - revert-migrations:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
 
   cloudfront-update:
     docker:
