@@ -220,7 +220,7 @@ jobs:
             aws --version
       - run:
           name: prepare env variables
-          commmand: |
+          command: |
               touch ~/project/backend/.env
               echo NODE_ENV=production > ~/project/backend/.env
               echo TYPEORM_CONNECTION=postgres >> ~/project/backend/.env
