@@ -1,17 +1,64 @@
 ---
-  - name: "The remote environment"
-    shell: env
 
-  - name: "copy zipped archive"
-    become: yes
-    synchronize:
-      src: ../../artifact.tar.gz
-      dest: ~/
-      recursive: true
+- name: "show remote environment"
+  shell: env
+  
+- name: "copy zipped archive"
+  become: true
+  synchronize:
+    src: ../../artifact.tar.gz
+    dest: /home/ubuntu/artifact.tar.gz
+    recursive: true
 
-  - name: "Extract artifact to EC2"
-    shell: |
-        tar xzvf artifact.tar.gz
+- name: Creates directory
+  file:
+    path: ~/backend_app
+    state: directory
+
+- name: Extract the zipped artifact
+  shell: tar xzvf artifact.tar.gz --directory backend_app
+
+- name: Install dependencies
+  args:
+    chdir: /home/ubuntu/backend_app
+  shell: npm install
+
+- name: "delete anything that might already be running"
+  become: true
+  ignore_errors: true
+  command: pm2 stop default
+
+- name: "start server"
+  become: true
+  args:
+    chdir: /home/ubuntu/backend_app
+  shell: pm2 start npm -- start
+  environment:
+     ENVIRONMENT: production
+     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
+     TYPEORM_MIGRATIONS_DIR: "./migrations"
+     TYPEORM_MIGRATIONS: "./migrations/*.js"
+     TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
+     TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
+     TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
+     TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
+     TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+     TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
+
+
+  # - name: "The remote environment"
+  #   shell: env
+
+  # - name: "copy zipped archive"
+  #   become: yes
+  #   synchronize:
+  #     src: ../../artifact.tar.gz
+  #     dest: ~/
+  #     recursive: true
+
+  # - name: "Extract artifact to EC2"
+  #   shell: |
+  #       tar xzvf artifact.tar.gz
 
   # - name: install NPM
   #   become: yes
@@ -25,23 +72,12 @@
   #     name: pm2
   #     global: yes
 
-  - name: "start Udapeople application"
-    shell: |
-        npm install
-        pm2 stop default
-        pm2 start npm -- start
-    environment:
-     ENVIRONMENT: production
-     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-     TYPEORM_MIGRATIONS_DIR: "./migrations"
-     TYPEORM_MIGRATIONS: "./migrations/*.js"
-     TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
-     TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
-     TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
-     TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-     TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-     TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
-
+  # - name: "start Udapeople application"
+  #   shell: |
+  #       npm install
+  #       pm2 stop default
+  #       pm2 start npm -- start
+    
 
 
   # - name: "Extract artifact to EC2"

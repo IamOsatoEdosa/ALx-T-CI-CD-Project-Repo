@@ -322,27 +322,26 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run:
-          name: Install necessary dependencies and Zip back end directory
+          name: Install necessary dependencies
           command: |
             apk add --update tar gzip ansible curl rsync openssh nodejs npm bash
             pip install awscli
             aws --version 
       - run:
+          name: Zip backend directory and Deploy the Backend
+          command: |
+            tar -C backend -czvf artifact.tar.gz .
+      - run:
           name: Deploy the Backend
           command: |
-            cd backend
-            npm i
-            npm run build
-            cd ..
-            tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is: "
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml -v
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      - revert-migrations:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - destroy-environment:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - revert-migrations:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   smoke-test:
     docker:
       - image: python:3.7-alpine3.11 
