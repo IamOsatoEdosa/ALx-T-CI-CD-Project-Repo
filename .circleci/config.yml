@@ -298,7 +298,7 @@ jobs:
             pip install awscli
             aws --version 
       - run:
-          name: Provide Environment Variables and Zip backend directory
+          name: Zip backend directory
           command: |
             cat backend/.env
             cd backend
