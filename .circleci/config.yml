@@ -175,8 +175,8 @@ jobs:
             ansible --version
             pip install awscli
             aws --version
-            cat inventory.txt > inventory.txt
-            cat inventory.txt 
+            cat ~/project/.circleci/ansible/inventory.txt > ~/project/.circleci/ansible/inventory.txt
+            cat ~/project/.circleci/ansible/inventory.txt 
       - run:
           name: Run Playbook and Configure server
           command: |
