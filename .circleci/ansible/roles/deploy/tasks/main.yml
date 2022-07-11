@@ -7,13 +7,6 @@
     apt:
       upgrade: true
 
-  - name: install dependencies, such as NodeJS and NPM
-    become: yes
-    apt:
-      name: ["nodejs", "npm"]
-      state: latest
-      update_cache: true
-
   - name: "install pm2"
     become: yes
     npm:
