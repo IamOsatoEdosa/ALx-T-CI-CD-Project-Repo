@@ -31,13 +31,14 @@
 
   - name: Creates directory
     become: yes
-    shell: |
-        mkdir backend_app
+    file:
+      path: ~/backend_app
+      state: directory
 
   - name: "Extract artifact to EC2"
     unarchive:
       src: ~/project/artifact.tar.gz
-      dest: home/ubuntu/backend_app 
+      dest: ~backend_app 
 
   - name: "start server"
     shell: |
