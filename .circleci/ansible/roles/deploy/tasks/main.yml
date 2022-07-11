@@ -11,7 +11,7 @@
     become: yes
     synchronize:
       src: ../../artifact.tar.gz
-      dest: ~/
+      dest: ~/artifact.tar.gz
       recursive: true
 
   # - name: Creates directory
