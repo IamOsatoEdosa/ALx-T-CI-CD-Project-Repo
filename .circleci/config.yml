@@ -324,7 +324,7 @@ jobs:
             echo TYPEORM_DATABASE=udapeople >> ~/project/backend/.env
             echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ~/project/backend/.env
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ~/project/backend/.env
-            cat ~/project/backend
+            ls -a ~/project/backend
             cat ~/project/backend/.env
             cd ..
             tar -C backend -czvf artifact.tar.gz .
