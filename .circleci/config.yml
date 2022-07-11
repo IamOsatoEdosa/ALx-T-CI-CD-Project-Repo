@@ -313,14 +313,10 @@ jobs:
             echo "Contents  of the inventory.txt file is: "
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml -v
-      # - run:
-      #     name: Deploy backend
-      #     working_directory: ~/project/.circleci/ansible
-      #     command: |
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      - revert-migrations:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - destroy-environment:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - revert-migrations:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   smoke-test:
     docker:
       - image: python:3.7-alpine3.11 
@@ -460,9 +456,9 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - smoke-test:
+      #     requires: [deploy-backend, deploy-frontend]
+      # - cloudfront-update:
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]

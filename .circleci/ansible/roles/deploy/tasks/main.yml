@@ -21,13 +21,12 @@
             cd backend_app
             tar xzvf artifact.tar.gz
 
-  - name: "start server"
-    become: yes
-    shell: |
-          cd backend_app
-          sudo npm install
-          sudo pm2 stop default
-          sudo pm2 start npm -- start 
+  # - name: "start server"
+  #   shell: |
+  #         cd backend_app
+  #         sudo npm install
+  #         sudo pm2 stop default
+  #         sudo pm2 start npm -- start 
     environment:
      ENVIRONMENT: production
      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
