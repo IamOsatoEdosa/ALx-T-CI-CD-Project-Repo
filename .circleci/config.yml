@@ -232,20 +232,6 @@ jobs:
               echo TYPEORM_DATABASE=udapeople >> ~/project/backend/.env
               echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ~/project/backend/.env
               echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ~/project/backend/.env
-        
-      #  cat backend/.env
-
-        # echo NODE_ENV=production > ~/project/backend/.env
-        # echo TYPEORM_CONNECTION=postgres >> ~/project/backend/.env
-        # echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ~/project/backend/.env
-        # echo TYPEORM_HOST=udapeople-database1.c2qxjxanfw6n.us-east-1.rds.amazonaws.com >> ~/project/backend/.env
-        # echo TYPEORM_PORT=5432 >> ~/project/backend/.env
-        # echo TYPEORM_USERNAME=udapeople >> ~/project/backend/.env
-        # echo TYPEORM_PASSWORD=udapeople >> ~/project/backend/.env
-        # echo TYPEORM_DATABASE=udapeople >> ~/project/backend/.env
-        # echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ~/project/backend/.env
-        # echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ~/project/backend/.env
-      
       - run:
           name: Run migrations
           command: |
