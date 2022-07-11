@@ -11,7 +11,7 @@
     become: yes
     synchronize:
       src: ../../artifact.tar.gz
-      dest: ~/artifact.tar.gz
+      dest: /home/ubuntu
       recursive: true
 
   # - name: Creates directory
@@ -27,8 +27,8 @@
 
   - name: "Extract artifact to EC2"
     unarchive:
-      src: ~/artifact.tar.gz
-      dest: ~/
+      src: /home/ubuntu/
+      dest: /home/ubuntu/
       remote_src: True
 
   - name: "start server"
