@@ -433,13 +433,10 @@ jobs:
           name: Delete old stack
           command: |
             if [[ "${CurrentWorkflowID}" != "${OldWorkFlowID}" ]]
-            then
-              echo "The udapeople-${CurrentWorkflowID} stack is now Green so the ${OldWorkflowID} bucket and stack will now be deleted 
-              aws s3 rm "s3://${OldWorkFlowID}" --recursive
-      # aws cloudformation delete-stack --stack-name "${OldWorkFlowID}"
-      # aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkFlowID}"
+            then 
+              aws s3 rm "s3://udapeople-${OldWorkFlowID}" --recursive
             else
-              echo "${OldWorkFlowID}==${CurrentWorkflowID} => nothing to be done..."
+              echo "$OldWorkFlowID==$CurrentWorkflowID => nothing will be done."
             fi
 
 workflows:
