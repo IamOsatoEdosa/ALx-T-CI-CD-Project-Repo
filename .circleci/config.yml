@@ -435,7 +435,7 @@ jobs:
           command: |
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
-              echo "The udapeople-${LiveWorkflowID} stack is now Green so the ${OldWorkflowID} bucket and stack will now be deleted 
+              echo "The udapeople-${NewWorkflowID} stack is now Green so the ${OldWorkflowID} bucket and stack will now be deleted 
               aws s3 rm "s3://${OldWorkFlowID}" --recursive
               # aws cloudformation delete-stack --stack-name "${OldWorkFlowID}"
               # aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkFlowID}"
