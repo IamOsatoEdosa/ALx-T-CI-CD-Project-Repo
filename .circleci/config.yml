@@ -429,16 +429,15 @@ jobs:
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"
-      # - run:
-      #     name: Delete old stack
-      #     command: |
             if [[ "${CurrentWorkflowID}" != "${OldWorkFlowID}" ]]
             then 
               aws s3 rb s3://udapeople-${OldWorkFlowID} --force
             else
               echo "$OldWorkFlowID==$CurrentWorkflowID => nothing will be done."
             fi
-
+# - run:
+      #     name: Delete old stack
+      #     command: |
 workflows:
   UdaPeopleWorkflow:
     jobs:
