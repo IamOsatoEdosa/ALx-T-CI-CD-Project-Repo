@@ -382,7 +382,7 @@ jobs:
               --no-paginate --output text > ~/project/OldWorkFlowID.txt
               
               export OldWorkflowID=$(cat OldWorkFlowID.txt)
-              echo "The cloudfront distribution to be deprecated is ${OldWorkflowID}"
+              echo "The cloudfront distribution to be deprecated is udapeople-${OldWorkflowID}"
               cat OldWorkFlowID.txt
       - run:
           name: Update cloudfront distribution
@@ -434,7 +434,7 @@ jobs:
           command: |
             if [[ "${CurrentWorkflowID}" != "${OldWorkFlowID}" ]]
             then 
-              aws s3 rm "s3://udapeople-${OldWorkFlowID}" --recursive
+              aws s3 rb s3://udapeople-${OldWorkFlowID} --force
             else
               echo "$OldWorkFlowID==$CurrentWorkflowID => nothing will be done."
             fi
