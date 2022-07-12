@@ -375,7 +375,7 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install -y nodejs         
       - run:
-          name: Get ID of cloudfront distribution to be deprecated
+          name: Get Old workflow ID
           command: |
               export OldWorkFlowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
@@ -388,7 +388,7 @@ jobs:
           command: |
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
-            --stack-name InitialStack \
+            --stack-name NewStack \
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
       - persist_to_workspace:
@@ -412,15 +412,15 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_14.x | bash -
             yum install -y nodejs npm
       - run:
-          name: Get old stack workflow id
+          name: Get New stack workflow id
           command: |
             OldWorkFlowID=$(cat OldWorkFlowID.txt)
             echo OldWorkFlowID: "${OldWorkFlowID}"
 
-            export LiveWorkflowID=$(aws cloudformation \
+            export NewWorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
-              echo LiveWorkflowID: "${LiveWorkflowID}"
+              echo NewWorkflowID: "${NewWorkflowID}"
               echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
           
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
@@ -429,13 +429,13 @@ jobs:
 
             
       - run:
-          name: Delete old stack Bucket
+          name: Delete old stack
           command: |
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
               echo "udapeople-${LiveWorkflowID} stack is now Green so udapeople-${OldWorkflowID} bucket will now be deleted 
-              aws s3 rm "s3://udapeople-${OldWorkFlowID}" --recursive
-              # aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkFlowID}"
+              aws s3 rm "s3://${OldWorkFlowID}" --recursive
+              aws cloudformation delete-stack --stack-name "${OldWorkFlowID}"
               # aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkFlowID}"
             fi
 
