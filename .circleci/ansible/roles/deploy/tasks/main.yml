@@ -26,18 +26,18 @@
   become: true
   args:
     chdir: /home/ubuntu/backend_app
-  shell: npm install
+  shell: sudo npm install
 
 - name: "delete anything that might already be running"
   become: true
   ignore_errors: true
-  command: pm2 stop default
+  command: sudo pm2 stop default
 
 - name: "start server"
   become: true
   args:
     chdir: /home/ubuntu/backend_app
-  shell: pm2 start npm -- start
+  shell: sudo pm2 start npm -- start
   environment:
      ENVIRONMENT: production
      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
