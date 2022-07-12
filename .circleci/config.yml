@@ -439,7 +439,7 @@ jobs:
       # aws cloudformation delete-stack --stack-name "${OldWorkFlowID}"
       # aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkFlowID}"
             else
-                echo "Hmmm, looks like the Old Stack Work flow ID "${OldWorkFlowID}"==${CurrentWorkflowID} , => nothing to be done"
+              echo "${OldWorkFlowID}==${CurrentWorkflowID} => nothing to be done..."
             fi
 
 workflows:
