@@ -433,7 +433,7 @@ jobs:
             then 
               aws s3 rb s3://udapeople-${OldWorkFlowID} --force
             else
-              echo "$OldWorkFlowID==$CurrentWorkflowID => nothing will be done."
+              echo "$OldWorkFlowID==$CurrentWorkflowID => nothing will be done..."
             fi
 # - run:
       #     name: Delete old stack
