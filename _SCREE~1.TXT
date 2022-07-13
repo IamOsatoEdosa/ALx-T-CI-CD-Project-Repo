@@ -1,0 +1,2 @@
+Screenshot 5 "Appropriate job failure for infrastructure creation. [SCREENSHOT05]" is not present because the initial ami provided in the backend.yml file was available
+for me so there was no job failure for that job.
